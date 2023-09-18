@@ -22,7 +22,7 @@ export default function Login() {
         try {
             const response = await axios.post('http://localhost:8080/signin', formData);
             setResponse(response);
-            localStorage.setItem("user", response.data.id);
+            localStorage.setItem("userId", response.data.id);
         } catch (error) {
             console.error('Login error:', error);
         }
@@ -40,7 +40,6 @@ export default function Login() {
                     value={formData.emailId}
                     onChange={handleChange}
                 />
-                <Form.Control.Feedback tooltip>Looks good!</Form.Control.Feedback>
             </Form.Group>
             <Form.Group>
                 <Form.Label>Password</Form.Label>
@@ -51,7 +50,6 @@ export default function Login() {
                     value={formData.password}
                     onChange={handleChange}
                 />
-                <Form.Control.Feedback tooltip>Looks good!</Form.Control.Feedback>
             </Form.Group>
             <Button type="submit">Login</Button>
         </Form>

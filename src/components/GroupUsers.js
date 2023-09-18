@@ -5,6 +5,6 @@ export default function GroupUsers() {
   const location = useLocation();
   const { data } = location.state || {};
   return (
-    <div>some {JSON.stringify(data)}</div>
+    <div>{JSON.stringify(data)}</div>
   )
 }

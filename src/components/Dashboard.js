@@ -12,7 +12,8 @@ export default function Dashboard() {
         const jwtToken = getCookie('nikcookie');
 
         if (jwtToken) {
-          const userId = localStorage.getItem("user");
+            const userId = localStorage.getItem("userId");
+        //   const userId = localStorage.getItem("user");
           axios.get(`http://localhost:8080/splitwise/user/${userId}/groups`, {
             withCredentials: true,
             headers: {

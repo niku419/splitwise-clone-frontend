@@ -14,10 +14,10 @@ export default function Home() {
             <Route path='/signin' element={<Login />} />
             <Route path='/signup' element={<Signup />} />
             <Route path='/splitwise' element={<Dashboard />} />
-            <Route path='/:id/expenses' element={<GroupExpenses />} />
-            <Route path='/:id/users' element={<GroupUsers />} />
+            <Route path='/expenses' element={<GroupExpenses />} />
+            <Route path='/users' element={<GroupUsers />} />
             <Route path='/createGroup' element={<CreateGroup />} />
-            <Route path='/:id/createExpense' element={<CreateExpense />} />
+            <Route path='/createExpense' element={<CreateExpense />} />
         </Routes>
     )
 }

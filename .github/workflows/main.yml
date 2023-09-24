@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-and-publish:
@@ -19,9 +22,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Docker Image
-        run: docker build -t niku419/splitwise-docker-frontend:latest -f ./splitwise-frontend/Dockerfile .
-        working-directory: ./splitwise-frontend
-        
-      - name: Push Docker Image
-        run: docker push niku419/splitwise-docker-frontend:latest
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          tags: niku419/splitwise-docker-frontend:latest
+
+      - name: Run the image in a container
+        uses: addnab/docker-run-action@v3
+        with:
+          image: niku419/splitwise-docker-frontend:latest
+          run: |
+            echo "running the docker image"

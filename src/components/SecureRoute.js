@@ -1,18 +1,17 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
 import UnAuthorized from '../components/UnAuthorized'
 import { getCookie } from '../middleware/middleware'
+import { Navigate } from 'react-router';
 
-export default function SecureRoute({element: Component, ...rest}) {
+export default function SecureRoute({children}) {
 
     const isAuthenticated = () => {
         return !!getCookie('nikcookie');
     };
+    
+    if (!isAuthenticated()) {
+        return <Navigate to="/signin" replace/>
+    }
 
-    return (
-        <Route {...rest} render={
-            (props) => isAuthenticated() ? ( <Component {...props} /> ) : <UnAuthorized />
-        }
-    />
-  )
+    return children;
 }

@@ -3,7 +3,6 @@ import axios from 'axios';
 import { getCookie } from '../middleware/middleware';
 import Groups from './Groups';
 
-
 export default function Dashboard() {
 
     const [data, setData] = useState([]);
@@ -13,20 +12,17 @@ export default function Dashboard() {
 
         if (jwtToken) {
             const userId = localStorage.getItem("userId");
-        //   const userId = localStorage.getItem("user");
-          axios.get(`http://localhost:8080/splitwise/user/${userId}/groups`, {
+            axios.get(`http://localhost:8080/splitwise/user/${userId}/groups`, {
             withCredentials: true,
             headers: {
                 Cookie: `nikcookie=${jwtToken}`,
             }
           })
           .then((response) => {
-            // Handle the response data
             console.log('Data from secured route:', response.data);
             setData(response.data);
           })
           .catch((error) => {
-            // Handle errors, e.g., unauthorized access
             console.error('Error fetching data:', error);
           });
         }

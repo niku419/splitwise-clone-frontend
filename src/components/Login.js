@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Form, Button, Container } from 'react-bootstrap';
+import { setCookie } from '../middleware/middleware';
 
 export default function Login() {
     const [formData, setFormData] = useState({
@@ -23,6 +24,7 @@ export default function Login() {
             const response = await axios.post('http://localhost:8080/signin', formData);
             setResponse(response);
             localStorage.setItem("userId", response.data.id);
+            setCookie('nikcookie', response.data.token, 2);
         } catch (error) {
             console.error('Login error:', error);
         }

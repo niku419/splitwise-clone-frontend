@@ -6,17 +6,25 @@ import Dashboard from './Dashboard';
 import GroupUsers from './GroupUsers';
 import GroupExpenses from './GroupExpenses';
 import CreateGroup from './CreateGroup';
-import SecureRoute from './SecureRoute';
+import Navbar from './Navbar';
+import UserExpenses from './UserExpenses';
+import Main from './Main';
 
 export default function Home() {
     return (
-        <Routes>
-            <Route path='/signin' element={<Login />} />
-            <Route path='/signup' element={<Signup />} />
-            <Route path='/splitwise' element={<Dashboard />} />
-            <Route path='/:id/expenses' element={<SecureRoute><GroupExpenses /></SecureRoute>} />
-            <Route path='/:id/users' element={<GroupUsers />} />
-            <Route path='/createGroup' element={<CreateGroup />} />
-        </Routes>
+        <div>
+            <Navbar />
+            <Routes>
+                <Route path='/' element={<Main />} />
+                <Route path='/signin' element={<Login />} />
+                <Route path='/signup' element={<Signup />} />
+                <Route path='/splitwise' element={<Dashboard />} />
+                <Route path='/:id/expenses' element={<GroupExpenses />} />
+                <Route path='/:id/users' element={<GroupUsers />} />
+                <Route path='/createGroup' element={<CreateGroup />} />
+                <Route path='user/:id/expenses' element={<UserExpenses />} />
+            </Routes>
+        </div>
+        
     )
 }

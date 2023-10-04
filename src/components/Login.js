@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Form, Button, Container } from 'react-bootstrap';
 import { setCookie } from '../middleware/middleware';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
     const [formData, setFormData] = useState({
@@ -9,7 +10,7 @@ export default function Login() {
         password: '',
     });
     const [response, setResponse] = useState();
-    
+    const navigate = useNavigate();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -25,6 +26,7 @@ export default function Login() {
             setResponse(response);
             localStorage.setItem("userId", response.data.id);
             setCookie('nikcookie', response.data.token, 2);
+            navigate("/splitwise");
         } catch (error) {
             console.error('Login error:', error);
         }

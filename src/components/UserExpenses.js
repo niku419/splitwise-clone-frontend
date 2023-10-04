@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import SecureRoute from './SecureRoute';
+import axios from 'axios';
+import { getCookie } from '../middleware/middleware';
 
 export default function UserExpenses() {
+    const [data, setData] = useState();
     useEffect(() => {
         const jwtToken = getCookie('nikcookie');
 
         if (jwtToken) {
-          const userId = localStorage.getItem("user");
+          const userId = localStorage.getItem("userId");
+          console.log(userId)
           axios.get(`http://localhost:8080/splitwise/user/${userId}/expenses`, {
             withCredentials: true,
             headers: {
@@ -24,6 +29,6 @@ export default function UserExpenses() {
         }
     }, []);
   return (
-    <div>UserExpenses</div>
+    <SecureRoute>{JSON.stringify(data)}</SecureRoute>
   )
 }

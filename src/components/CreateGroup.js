@@ -3,7 +3,7 @@ import { Button, Container, Form } from 'react-bootstrap';
 import axios from 'axios';
 import { getCookie } from '../middleware/middleware';
 
-export default function CreateGroup() {
+export default function CreateGroup({ onCreateGroup }) {
     const [emails, setEmails] = useState(['']);
     const [groupName, setGroupName] = useState('');
     
@@ -41,6 +41,7 @@ export default function CreateGroup() {
                 })
                 .then((response) => {
                   console.log('Data from secured route:', response.data);
+                  onCreateGroup(response.data);
                 })
                 .catch((error) => {
                   console.error('Error fetching data:', error);

@@ -2,10 +2,24 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { getCookie } from '../middleware/middleware';
 import Groups from './Groups';
+import CreateGroup from './CreateGroup';
+import SecureRoute from './SecureRoute';
+import { Card } from 'react-bootstrap';
 
 export default function Dashboard() {
 
     const [data, setData] = useState([]);
+    const [groups, setGroups] = useState([]);
+
+    const onCreateGroup = (group) => {
+      setGroups([...groups, group]);
+      setData([...data, group]);
+    }
+
+    const onGroupDelete = (updatedGroups) => {
+      setGroups(updatedGroups);
+      setData(updatedGroups);
+    }
 
     useEffect(() => {
         const jwtToken = getCookie('nikcookie');
@@ -27,10 +41,17 @@ export default function Dashboard() {
           });
         }
     }, []);
+
+    useEffect(() => {
+      setGroups([...data]);
+    }, [data])
     
   return (
-    <div>
-        {data.length > 0 && <Groups data={data}/>}
-    </div>
+    <SecureRoute>
+        {groups.length > 0 && <Groups data={groups} onGroupDelete={onGroupDelete}/>}
+        <Card>
+          <CreateGroup onCreateGroup={onCreateGroup} />
+        </Card>
+    </SecureRoute>
   )
 }

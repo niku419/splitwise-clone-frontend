@@ -19,6 +19,10 @@ export const setCookie = (name, value, daysToExpire) => {
   document.cookie = name + "=" + value + ";" + expires + ";path=/";
 }
 
+export const removeCookie = () => {
+  setCookie('nikcookie', null, 2);
+}
+
 export const getBalances = (expenses, userId) => {
     const userBalances = new Map();
     expenses.forEach((expense) => {

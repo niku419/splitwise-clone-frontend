@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { getBalances, getCookie } from '../middleware/middleware';
-import { Button, Container, Form, Row, Col } from 'react-bootstrap';
+import { Button, Container, Form, Row, Col, Card } from 'react-bootstrap';
 import axios from 'axios';
+import SecureRoute from './SecureRoute';
 
 export default function GroupExpenses() {
 
@@ -83,9 +84,27 @@ export default function GroupExpenses() {
     console.log('Form submitted:', formData);
   };
 
+  const deleteExpense = async (expenseId) => {
+    try {
+        const jwtToken = getCookie('nikcookie');
+        if (jwtToken) {
+            const response = await axios.delete(`http://localhost:8080/splitwise/expenses/${expenseId}/delete`, {
+                withCredentials: true,
+                headers: {
+                    Cookie: `nikcookie=${jwtToken}`,
+                }
+            });
+            console.log(response);
+            const updatedData = expenses.filter((expense) => expense.id !== expenseId);
+            setExpenses(updatedData);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+  }
+
   useEffect(() => {
-    const userId = localStorage.getItem("user");
-    const userExpenses = getBalances(data, userId);
+    // const userExpenses = getBalances(data, userId);
     const jwtToken = getCookie('nikcookie');
 
     if (jwtToken) {
@@ -106,7 +125,24 @@ export default function GroupExpenses() {
   }, [reloadExpenses])
   
   return (
-    <div>
+    <SecureRoute>
+      {JSON.stringify(expenses)}
+      <Container className='row'>
+        {expenses.map((expense) => (
+          <Card key={expense.id} style={{ width: '18rem' }}>
+            <Card.Body>
+              <Card.Title>{expense.title}</Card.Title>
+              <Card.Text>
+                Description: {expense.description}
+              </Card.Text>
+              <Card.Text>
+                Amount: ${expense.amount}
+              </Card.Text>
+              <Button variant="danger" onClick={() => deleteExpense(expense.id)}>Delete Expense</Button>
+            </Card.Body>
+          </Card>
+        ))}
+      </Container>
       <Container>
         <Row>
           <Col>
@@ -174,6 +210,6 @@ export default function GroupExpenses() {
           </Col>
         </Row>
       </Container>    
-    </div>
+    </SecureRoute>
   )
 }

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { getCookie } from '../middleware/middleware';
 import axios from 'axios';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button, Card } from 'react-bootstrap';
+import SecureRoute from './SecureRoute';
 
 export default function GroupUsers() {
 
@@ -59,6 +60,29 @@ export default function GroupUsers() {
     }
   }
 
+  const removeUser = async (userId) => {
+    try {
+      const jwtToken = getCookie('nikcookie');
+        const formData = {
+          groupId: id,
+          userId
+        }
+        if (jwtToken) {
+            const response = await axios.post(`http://localhost:8080/splitwise/group/deleteUser`, formData, {
+                withCredentials: true,
+                headers: {
+                    Cookie: `nikcookie=${jwtToken}`,
+                }
+            });
+            console.log(response);
+            const updatedData = users.filter((user) => user.id !== userId);
+            setUsers(updatedData);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+  }
+
   useEffect(() => {
     const jwtToken = getCookie('nikcookie');
 
@@ -77,10 +101,23 @@ export default function GroupUsers() {
         console.error('Error fetching data:', error);
       });
     }
-  }, [reloadUsers])
+  }, [reloadUsers, id])
   
   return (
-    <div>{JSON.stringify(users)} 
+    <SecureRoute>{JSON.stringify(users)} 
+      <Container>
+        {users.map((user) => (
+          <Card key={user.id} style={{ width: '18rem' }}>
+            <Card.Body>
+              <Card.Title>{user.name}</Card.Title>
+              <Card.Text>
+                email: {user.emailId}
+              </Card.Text>
+              <Button variant="danger" onClick={() => removeUser(user.id)}>Delete User</Button>
+            </Card.Body>
+          </Card>
+        ))}
+      </Container>
       <Container>
         <Form onSubmit={handleSubmit}>
         {emails.map((email, index) => (
@@ -103,6 +140,6 @@ export default function GroupUsers() {
         <Button type="submit">Submit</Button>
       </Form>
     </Container>  
-    </div>
+    </SecureRoute>
   )
 }
